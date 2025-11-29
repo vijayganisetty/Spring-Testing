@@ -41,7 +41,7 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<EmployeeDTO> deleteEmployeeById(@PathVariable long id){
         EmployeeDTO employee = employeeService.deleteEmployeeById(id);
-        return new ResponseEntity<>(employee, HttpStatus.GONE);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @GetMapping("/mail/{mail}")
