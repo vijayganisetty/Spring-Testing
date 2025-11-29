@@ -46,12 +46,13 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
           Employee employee = employeeRepository.findByMail(employeeDTO.getMail());
-          if(employee==null) {
-              Employee emp = modelMapper.map(employeeDTO, Employee.class);
-              Employee newEmp = employeeRepository.save(emp);
-              return modelMapper.map(newEmp, EmployeeDTO.class);
+           if(employee!=null) {
+               throw new RuntimeException("employee with mail already exists");
           }
-          return new EmployeeDTO();
+        Employee emp = modelMapper.map(employeeDTO, Employee.class);
+        Employee newEmp = employeeRepository.save(emp);
+        return modelMapper.map(newEmp, EmployeeDTO.class);
+
     }
 
     @Override
@@ -60,9 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No Employee with id "+ id)
         );
-        if(employee!= null){
-            employeeRepository.delete(employee);
-        }
+        employeeRepository.delete(employee);
         return modelMapper.map(employee,EmployeeDTO.class);
     }
 
