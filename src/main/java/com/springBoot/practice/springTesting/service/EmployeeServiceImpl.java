@@ -48,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService{
           Employee employee = employeeRepository.findByMail(employeeDTO.getMail());
            if(employee!=null) {
                throw new RuntimeException("employee with mail already exists");
-          }
+            }
         Employee emp = modelMapper.map(employeeDTO, Employee.class);
         Employee newEmp = employeeRepository.save(emp);
         return modelMapper.map(newEmp, EmployeeDTO.class);
