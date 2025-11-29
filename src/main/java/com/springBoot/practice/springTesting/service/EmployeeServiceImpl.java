@@ -4,7 +4,10 @@ import com.springBoot.practice.springTesting.DTO.EmployeeDTO;
 import com.springBoot.practice.springTesting.entity.Employee;
 import com.springBoot.practice.springTesting.exception.ResourceNotFoundException;
 import com.springBoot.practice.springTesting.repository.EmployeeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService{
 
 
+    private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
@@ -23,9 +27,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 
     public EmployeeDTO getEmployeeById(long id) {
+        log.info("Fetching employee wth id {}", id);
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No Employee with id "+ id)
         );
+        log.info("Fetchecd Employee with id {}", id);
         return modelMapper.map(employee, EmployeeDTO.class);
     }
 
@@ -39,9 +45,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-          Employee employee = modelMapper.map(employeeDTO,Employee.class);
-          Employee newEmp = employeeRepository.save(employee);
-          return modelMapper.map(newEmp, EmployeeDTO.class);
+          Employee employee = employeeRepository.findByMail(employeeDTO.getMail());
+          if(employee==null) {
+              Employee emp = modelMapper.map(employeeDTO, Employee.class);
+              Employee newEmp = employeeRepository.save(emp);
+              return modelMapper.map(newEmp, EmployeeDTO.class);
+          }
+          return new EmployeeDTO();
     }
 
     @Override
