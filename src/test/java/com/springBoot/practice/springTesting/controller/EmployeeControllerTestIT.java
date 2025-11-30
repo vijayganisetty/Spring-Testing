@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EmployeeControllerTestIT  extends AbstractIntegrationTest{
+class EmployeeControllerTestIT extends AbstractIntegrationTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -18,7 +18,7 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     private EmployeeDTO employeeDTO;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         employee = Employee.builder()
                 .id(1L)
                 .name("kalyan")
@@ -34,10 +34,10 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     }
 
     @Test
-    void testGetEmployeeById_whenEmployeeIsExists(){
+    void testGetEmployeeById_whenEmployeeIsExists() {
         Employee savedEmp = employeeRepository.save(employee);
         webTestClient.get()
-                .uri("employee/{id}", savedEmp.getId() )
+                .uri("employee/{id}", savedEmp.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(EmployeeDTO.class)
@@ -46,15 +46,15 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     }
 
     @Test
-    void testGetEmployeeById_whenEmployeeDoesNotExist(){
+    void testGetEmployeeById_whenEmployeeDoesNotExist() {
         webTestClient.get()
-                .uri("employee/{id}",2)
+                .uri("employee/{id}", 2)
                 .exchange()
                 .expectStatus().isNotFound();
     }
 
     @Test
-    void testCreateEmployee_whenMailAlreadyExists(){
+    void testCreateEmployee_whenMailAlreadyExists() {
         employeeRepository.save(employee);
 
         webTestClient.post()
@@ -65,7 +65,7 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     }
 
     @Test
-    void testCreateEmployee_whenEmployeeIsNew(){
+    void testCreateEmployee_whenEmployeeIsNew() {
         webTestClient.post()
                 .uri("employee")
                 .bodyValue(employee)
@@ -76,15 +76,16 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     }
 
     @Test
-    void testDeleteEmployee_WhenEmployeeExists(){
+    void testDeleteEmployee_WhenEmployeeExists() {
         Employee emp = employeeRepository.save(employee);
         webTestClient.delete()
                 .uri("employee/{id}", emp.getId())
                 .exchange()
                 .expectStatus().isOk();
     }
+
     @Test
-    void testDeleteEmployee_WhenEmployeeNotExists(){
+    void testDeleteEmployee_WhenEmployeeNotExists() {
         webTestClient.delete()
                 .uri("employee/{id}", employee.getId())
                 .exchange()
@@ -92,7 +93,7 @@ class EmployeeControllerTestIT  extends AbstractIntegrationTest{
     }
 
     @Test
-    void testGetAllEmployees(){
+    void testGetAllEmployees() {
         webTestClient.get()
                 .uri("employee")
                 .exchange()
